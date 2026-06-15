@@ -28,7 +28,7 @@ This document provides a complete handoff summary of the Next.js migration, unif
   - Serverless CI/CD Pipeline: `/projects/serverless-pipeline`
 - Reorganized and wrapped all pages with the unified styling system (`guide-theme.css` + `GuideWrapper`).
 
-### 2. Guide Cards Reordering (Dev to Prod Format)
+### 2. Guide Cards Reordering & "Coming Soon" Placeholders
 - Rearranged the core guides in the landing page `toolsList` array to follow a logical development-to-production pipeline:
   1. **DevOps Terminology**: Foundational knowledge.
   2. **Python Automation**: Writing scripting and local automation code.
@@ -37,6 +37,7 @@ This document provides a complete handoff summary of the Next.js migration, unif
   5. **Jenkins CI/CD**: Automating build and delivery pipelines.
   6. **Kubernetes Mastery**: Orchestrating containers at production scale.
   7. **Monitoring & Metrics**: Implementing production visibility (Prometheus/Grafana).
+- **Added a "More Tool Guides" placeholder card** at the end of the Core DevOps Toolkits section with a dashed border, upcoming badge, and locked state to indicate that guides for Terraform, Git, GitHub Actions, and Ansible are under development.
 
 ### 3. Visual & Logo Refinements
 - **AWS Logo Contrast Fix**: In [aws.svg](file:///c:/Users/gragh/OneDrive/Desktop/devopsden/project/public/images/logos/aws.svg), modified the text fill from dark charcoal (`#252f3e`) to white (`#ffffff`). It is now perfectly visible against the dark project tool stacks.

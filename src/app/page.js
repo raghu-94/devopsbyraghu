@@ -309,6 +309,24 @@ export default function Home() {
               </div>
             </div>
           ))}
+
+          {/* Placeholder card */}
+          <div className="card" style={{ opacity: 0.7, borderStyle: "dashed" }}>
+            <div className="card-header-img" style={{ background: "rgba(0,0,0,0.02)", color: "var(--light-text-muted)" }}>
+              🛠️
+            </div>
+            <div className="card-body">
+              <span className="card-badge beginner" style={{ background: "rgba(0,0,0,0.05)", color: "var(--light-text-muted)" }}>
+                Upcoming
+              </span>
+              <h3>More Tool Guides</h3>
+              <p>Mastery guides for Terraform, Git, GitHub Actions, Ansible, and other essential DevOps tools are under development.</p>
+              <div className="card-meta">
+                <span>Coming Soon</span>
+                <span className="card-action" style={{ color: "var(--light-text-muted)" }}>Locked</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
