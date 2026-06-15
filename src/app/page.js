@@ -4,18 +4,15 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 const toolAssets = {
-  docker: { name: "Docker", image: "/images/docker_mastery.png" },
-  dockerfile: { name: "Dockerfile", image: "/images/dockerfile_guide.png" },
-  jenkins: { name: "Jenkins", image: "/images/jenkins.png" },
-  kubernetes: { name: "Kubernetes", image: "/images/kubernetes.png" },
-  monitoring: { name: "Monitoring", image: "/images/monitoring.png" },
-  python: { name: "Python", image: "/images/python.png" },
-  terraform: { name: "Terraform", isLogo: true, color: "#844fba", logoText: "TF" },
-  aws: { name: "AWS", isLogo: true, color: "#ff9900", logoText: "AWS" },
-  "github-actions": { name: "GitHub Actions", isLogo: true, color: "#24292e", logoText: "GHA" },
-  argocd: { name: "ArgoCD", isLogo: true, color: "#ef4444", logoText: "Argo" },
-  helm: { name: "Helm", isLogo: true, color: "#0f172a", logoText: "Helm" },
-  git: { name: "Git", isLogo: true, color: "#f1502f", logoText: "Git" }
+  docker: { name: "Docker", image: "/images/logos/docker.svg" },
+  dockerfile: { name: "Dockerfile", image: "/images/logos/docker.svg" },
+  jenkins: { name: "Jenkins", image: "/images/logos/jenkins.svg" },
+  kubernetes: { name: "Kubernetes", image: "/images/logos/kubernetes.svg" },
+  monitoring: { name: "Monitoring", image: "/images/logos/prometheus.svg" },
+  python: { name: "Python", image: "/images/logos/python.svg" },
+  terraform: { name: "Terraform", image: "/images/logos/terraform.svg" },
+  aws: { name: "AWS", image: "/images/logos/aws.svg" },
+  "github-actions": { name: "GitHub Actions", image: "/images/logos/github-actions.svg" },
 };
 
 export default function Home() {
@@ -110,12 +107,7 @@ export default function Home() {
       desc: "Containerize applications from scratch. Understand layering, volume mounts, ports, and multi-stage builds.",
       route: "/guides/docker",
       meta: "12 Labs · Est. 4h",
-      image: "/images/docker_mastery.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
-        </svg>
-      )
+      image: "/images/logos/docker.svg"
     },
     {
       name: "Dockerfile Best Practices",
@@ -124,12 +116,7 @@ export default function Home() {
       desc: "Optimize images for production. Multi-stage compilation, layer caching, security hardening, and minimized footprints.",
       route: "/guides/dockerfile-guide",
       meta: "8 Sections · Est. 2h",
-      image: "/images/dockerfile_guide.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-        </svg>
-      )
+      image: "/images/logos/docker.svg"
     },
     {
       name: "Jenkins CI/CD",
@@ -138,12 +125,7 @@ export default function Home() {
       desc: "Automate build and deployment pipelines. Write scripted and declarative Jenkinsfiles, integrate webhooks & notifications.",
       route: "/guides/jenkins",
       meta: "10 Labs · Est. 6h",
-      image: "/images/jenkins.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-        </svg>
-      )
+      image: "/images/logos/jenkins.svg"
     },
     {
       name: "Kubernetes Mastery",
@@ -152,12 +134,7 @@ export default function Home() {
       desc: "Orchestrate containers at scale. Master pods, services, deployments, secrets, configmaps, persistent volumes & networking.",
       route: "/guides/kubernetes",
       meta: "15 Labs · Est. 7h",
-      image: "/images/kubernetes.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
-        </svg>
-      )
+      image: "/images/logos/kubernetes.svg"
     },
     {
       name: "Monitoring & Metrics",
@@ -166,13 +143,7 @@ export default function Home() {
       desc: "Implement complete stack visibility. Run Prometheus, Grafana, and node-exporter to track performance & alerts.",
       route: "/guides/monitoring",
       meta: "5 Labs · Est. 3h",
-      image: "/images/monitoring.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-        </svg>
-      )
+      image: "/images/logos/prometheus.svg"
     },
     {
       name: "Python Automation",
@@ -181,12 +152,7 @@ export default function Home() {
       desc: "Automate repetitive DevOps tasks. Write robust scripts using core library, file operations, APIs, and logs parsing.",
       route: "/guides/python",
       meta: "6 Labs · Est. 2.5h",
-      image: "/images/python.png",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-        </svg>
-      )
+      image: "/images/logos/python.svg"
     },
     {
       name: "DevOps Terminology",
@@ -195,11 +161,7 @@ export default function Home() {
       desc: "Get comfortable with foundational DevOps definitions, acronyms, and general concepts before writing code.",
       route: "/guides/terminology",
       meta: "1 Guide · Est. 1h",
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-        </svg>
-      )
+      image: "/images/logos/kubernetes.svg"
     }
   ];
 
@@ -332,11 +294,7 @@ export default function Home() {
           {toolsList.map((tool, index) => (
             <div key={index} className="card">
               <div className="card-header-img">
-                {tool.image ? (
-                  <img src={tool.image} alt={tool.name} className="card-header-banner" />
-                ) : (
-                  tool.icon
-                )}
+                <img src={tool.image} alt={tool.name} className="card-header-banner" />
               </div>
               <div className="card-body">
                 <span className={`card-badge ${tool.badgeClass}`}>{tool.badge}</span>
@@ -375,11 +333,7 @@ export default function Home() {
                         style={{ zIndex: proj.tools.length - idx }}
                         title={tool.name}
                       >
-                        {tool.image ? (
-                          <img src={tool.image} alt={tool.name} />
-                        ) : (
-                          <span style={{ backgroundColor: tool.color }}>{tool.logoText}</span>
-                        )}
+                        <img src={tool.image} alt={tool.name} />
                       </div>
                     );
                   })}
