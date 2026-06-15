@@ -18,6 +18,12 @@ export default function GuideWrapper({ title, subtitle, navGroups, children }) {
   // Flatten sections for navigation
   const flatSections = navGroups.flatMap(group => group.items);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Initialize active section from hash or first item
   useEffect(() => {
     const handleHashChange = () => {
@@ -172,7 +178,7 @@ export default function GuideWrapper({ title, subtitle, navGroups, children }) {
       <button 
         className="guide-sidebar-toggle"
         onClick={() => {
-          if (window.innerWidth <= 900) {
+          if (typeof window !== "undefined" && window.innerWidth <= 900) {
             setMobileSidebarOpen(!mobileSidebarOpen);
           } else {
             setSidebarCollapsed(!sidebarCollapsed);
@@ -180,7 +186,7 @@ export default function GuideWrapper({ title, subtitle, navGroups, children }) {
         }}
         aria-label="Toggle Sidebar"
       >
-        {sidebarCollapsed || (window.innerWidth <= 900 && !mobileSidebarOpen) ? "☰" : "✕"}
+        {!mounted || sidebarCollapsed || (typeof window !== "undefined" && window.innerWidth <= 900 && !mobileSidebarOpen) ? "☰" : "✕"}
       </button>
 
       {/* Main Content Area */}

@@ -1279,8 +1279,8 @@ spec:
                 <p>Sometimes LoadBalancers or PVCs (EBS Volumes) get left behind. You must manually check.</p>
                 <ol style={{ marginLeft: "20px", marginBottom: "24px" }}>
                   <li>Log into the AWS Console.</li>
-                  <li>Go to <strong>EC2 Dashboard -> Load Balancers</strong>. Ensure there are none.</li>
-                  <li>Go to <strong>EC2 Dashboard -> Volumes</strong>. Ensure there are no stray 10GB volumes sitting around.</li>
+                  <li>Go to <strong>EC2 Dashboard &rarr; Load Balancers</strong>. Ensure there are none.</li>
+                  <li>Go to <strong>EC2 Dashboard &rarr; Volumes</strong>. Ensure there are no stray 10GB volumes sitting around.</li>
                 </ol>
 
                 <div style={{ textAlign: "center", margin: "64px 0", padding: "40px", backgroundColor: "var(--g-accent-glow)", borderRadius: "12px", border: "1px solid var(--g-accent)" }}>

@@ -249,7 +249,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
                 />
                 <p>
                   Open <strong>https://localhost:8080</strong> in your browser.<br />
-                  (Chrome will show a warning about self-signed certificate. Click Advanced -> Proceed).
+                  (Chrome will show a warning about self-signed certificate. Click Advanced &rarr; Proceed).
                 </p>
 
                 <h3>4. Get the Admin Password</h3>
