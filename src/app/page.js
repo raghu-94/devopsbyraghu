@@ -101,6 +101,24 @@ export default function Home() {
 
   const toolsList = [
     {
+      name: "DevOps Terminology",
+      badge: "Beginner",
+      badgeClass: "beginner",
+      desc: "Get comfortable with foundational DevOps definitions, acronyms, and general concepts before writing code.",
+      route: "/guides/terminology",
+      meta: "1 Guide · Est. 1h",
+      image: "/images/terminology.png"
+    },
+    {
+      name: "Python Automation",
+      badge: "Beginner",
+      badgeClass: "beginner",
+      desc: "Automate repetitive DevOps tasks. Write robust scripts using core library, file operations, APIs, and logs parsing.",
+      route: "/guides/python",
+      meta: "6 Labs · Est. 2.5h",
+      image: "/images/logos/python.svg"
+    },
+    {
       name: "Docker Mastery",
       badge: "Beginner to Intermediate",
       badgeClass: "intermediate",
@@ -144,24 +162,6 @@ export default function Home() {
       route: "/guides/monitoring",
       meta: "5 Labs · Est. 3h",
       image: "/images/logos/prometheus.svg"
-    },
-    {
-      name: "Python Automation",
-      badge: "Beginner",
-      badgeClass: "beginner",
-      desc: "Automate repetitive DevOps tasks. Write robust scripts using core library, file operations, APIs, and logs parsing.",
-      route: "/guides/python",
-      meta: "6 Labs · Est. 2.5h",
-      image: "/images/logos/python.svg"
-    },
-    {
-      name: "DevOps Terminology",
-      badge: "Beginner",
-      badgeClass: "beginner",
-      desc: "Get comfortable with foundational DevOps definitions, acronyms, and general concepts before writing code.",
-      route: "/guides/terminology",
-      meta: "1 Guide · Est. 1h",
-      image: "/images/logos/kubernetes.svg"
     }
   ];
 
@@ -288,7 +288,7 @@ export default function Home() {
       <section id="guides" className="section fade-in-section">
         <div className="section-header">
           <span className="section-tag">Foundation</span>
-          <h2 className="section-title">Core DevOps Toolkits</h2>
+          <h2 className="section-title">Core <span>DevOps Toolkits</span></h2>
         </div>
         <div className="cards-grid">
           {toolsList.map((tool, index) => (
@@ -316,7 +316,7 @@ export default function Home() {
       <section id="projects" className="section fade-in-section">
         <div className="section-header">
           <span className="section-tag">Scenario Labs</span>
-          <h2 className="section-title">Production Projects</h2>
+          <h2 className="section-title">Production <span>Projects</span></h2>
         </div>
         <div className="cards-grid">
           {projectsList.map((proj, index) => (
@@ -379,11 +379,11 @@ export default function Home() {
       <section id="about" className="section fade-in-section">
         <div className="section-header">
           <span className="section-tag">The Creator</span>
-          <h2 className="section-title">About DevOps by Raghu</h2>
+          <h2 className="section-title">About <span>DevOps by Raghu</span></h2>
         </div>
         <div className="about-card">
           <div className="about-avatar-container">
-            <div className="about-avatar">R</div>
+            <img src="/images/about-r-logo.jpg" alt="Raghu" className="about-avatar" />
           </div>
           <div className="about-bio">
             <h3>Hi, I&apos;m Raghu</h3>

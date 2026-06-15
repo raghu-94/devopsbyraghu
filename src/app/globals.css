@@ -330,6 +330,13 @@ button {
   letter-spacing: -1px;
 }
 
+.section-title span {
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* Tool & Project Cards */
 .cards-grid {
   display: grid;
@@ -550,6 +557,13 @@ button {
   font-size: 4rem;
   font-weight: 800;
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+  object-fit: cover;
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.about-avatar:hover {
+  transform: scale(1.06) rotate(3deg);
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
 }
 
 .about-bio h3 {
