@@ -42,6 +42,12 @@ export default function K8sGitOpsProject() {
         { id: "chaos", title: "🔥 Test Your Knowledge" },
         { id: "destroy", title: "6. 🗑️ Destroy EKS" }
       ]
+    },
+    {
+      title: "Interview Prep",
+      items: [
+        { id: "interview", title: "🎙️ Interview Q&A" }
+      ]
     }
   ];
 
@@ -584,6 +590,62 @@ spec:
                     </li>
                   </ul>
                 </div>
+              </div>
+            );
+          case "interview":
+            return (
+              <div>
+                {/* Divider */}
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "0 0 32px" }}>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                  <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--g-text-muted)" }}>Interview Preparation</span>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                </div>
+
+                <h2>🎙️ Interview Q&A: K8s GitOps Platform</h2>
+                <p className="guide-subtitle">GitOps is a senior-level topic. Nailing these questions proves you understand modern cloud-native architectures.</p>
+
+                {[
+                  {
+                    q: "Q1. What exactly is GitOps, and why is it better than standard CI/CD?",
+                    a: "GitOps is an operating model where a Git repository is the Single Source of Truth for your infrastructure and applications. In standard CI/CD, Jenkins \"pushes\" deployments into the cluster via `kubectl apply`. In GitOps, an agent like ArgoCD lives inside the cluster and \"pulls\" the desired state from Git.",
+                    tip: "Mention that this removes the need to give Jenkins direct admin access to the Kubernetes cluster, making it significantly more secure."
+                  },
+                  {
+                    q: "Q2. What happens if a developer logs into the cluster and manually deletes a pod?",
+                    a: "If ArgoCD is configured with `selfHeal: true`, it will detect the \"Configuration Drift\" (the cluster state no longer matches the Git state). ArgoCD will instantly reconcile the difference by spinning the pod back up to ensure the cluster strictly matches what is in GitHub."
+                  },
+                  {
+                    q: "Q3. What is the difference between a Kubernetes Deployment and a StatefulSet?",
+                    a: "A Deployment is used for stateless applications (like a React frontend or Node.js web server) where the pods are completely interchangeable and can be killed/restarted randomly. A StatefulSet is used for stateful applications (like PostgreSQL or MongoDB) where pods require persistent storage, ordered scaling, and stable network identifiers (e.g., db-0, db-1)."
+                  },
+                  {
+                    q: "Q4. How do you handle Kubernetes Secrets in a GitOps workflow? You can't put plain passwords in GitHub, right?",
+                    a: "Exactly, you never commit plain Base64 Kubernetes secrets to Git. To solve this, I use Sealed Secrets (Bitnami) or External Secrets Operator. External Secrets allows K8s to fetch passwords dynamically from AWS Secrets Manager at runtime, keeping the Git repository completely free of sensitive data."
+                  },
+                  {
+                    q: "Q5. Your pod is stuck in \"CrashLoopBackOff\". How do you debug it?",
+                    a: "CrashLoopBackOff means the container starts, immediately crashes, and Kubernetes keeps trying to restart it. First, I run `kubectl logs <pod-name> --previous` to see the application crash logs. If the logs are empty, I run `kubectl describe pod <pod-name>` and check the \"Events\" section at the bottom for issues like missing ConfigMaps, OOMKilled (Out of Memory), or bad readiness probes."
+                  }
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    background: "var(--g-surface)", border: "1px solid var(--g-border)",
+                    borderRadius: "12px", padding: "20px 24px", marginBottom: "16px"
+                  }}>
+                    <div style={{ fontSize: "1rem", fontWeight: 600, color: "var(--g-text-bright)", marginBottom: "12px", display: "flex", gap: "10px" }}>
+                      <span style={{ color: "var(--g-accent)" }}>{item.q.split('.')[0]}.</span>
+                      <span>{item.q.split('.').slice(1).join('.')}</span>
+                    </div>
+                    <div style={{ color: "var(--g-text-muted)", fontSize: "0.88rem", paddingLeft: "36px", lineHeight: 1.7 }}>
+                      <p><strong>Answer:</strong> {item.a}</p>
+                      {item.tip && (
+                        <p style={{ color: "#86efac", fontStyle: "italic", marginTop: "8px" }}>
+                          <em>Pro Tip: {item.tip}</em>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             );
           default:

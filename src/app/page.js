@@ -76,7 +76,7 @@ export default function Home() {
   const animateStats = () => {
     const duration = 2000; // 2 seconds
     const startTime = performance.now();
-    const targets = { tools: 7, projects: 3, free: 100 };
+    const targets = { tools: 8, projects: 3, free: 100 };
 
     const updateCounters = (currentTime) => {
       const elapsedTime = currentTime - startTime;
@@ -162,6 +162,15 @@ export default function Home() {
       route: "/guides/monitoring",
       meta: "5 Labs · Est. 3h",
       image: "/images/logos/prometheus.svg"
+    },
+    {
+      name: "AWS VPN Wizard",
+      badge: "Advanced",
+      badgeClass: "advanced",
+      desc: "Generate a personalized strongSwan Site-to-Site VPN setup guide. Upload your AWS config — zero placeholders, zero errors.",
+      route: "/guides/aws-vpn-wizard",
+      meta: "31 Steps · Est. 3h",
+      image: "/images/logos/aws.svg"
     }
   ];
 

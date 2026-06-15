@@ -42,6 +42,12 @@ export default function IaCMigrationProject() {
         { id: "chaos", title: "🔥 Test Your Knowledge" },
         { id: "destroy", title: "6. 🗑️ Destroy AWS Resources" }
       ]
+    },
+    {
+      title: "Interview Prep",
+      items: [
+        { id: "interview", title: "🎙️ Interview Q&A" }
+      ]
     }
   ];
 
@@ -700,6 +706,33 @@ output "server_public_ip" {
                       <label htmlFor="iac-deleted">Tore down all AWS resources and ECR images</label>
                     </li>
                   </ul>
+                </div>
+              </div>
+            );
+          case "interview":
+            return (
+              <div>
+                {/* Divider */}
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "0 0 32px" }}>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                  <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--g-text-muted)" }}>Interview Preparation</span>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                </div>
+
+                <h2>🎙️ Interview Q&A: IaC Migration</h2>
+                <p className="guide-subtitle">Prepare for real-world interview questions about this project.</p>
+
+                <div style={{
+                  textAlign: "center", padding: "60px 40px",
+                  background: "var(--g-surface)", border: "1px solid var(--g-border)",
+                  borderRadius: "16px", position: "relative", overflow: "hidden"
+                }}>
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "2px", background: "linear-gradient(90deg, var(--g-accent), #8b5cf6)" }} />
+                  <div style={{ fontSize: "3rem", marginBottom: "16px" }}>🚧</div>
+                  <h3 style={{ color: "var(--g-text-bright)", fontSize: "1.2rem", marginBottom: "10px" }}>Interview Questions Coming Soon</h3>
+                  <p style={{ color: "var(--g-text-muted)", fontSize: "0.9rem", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>
+                    We&apos;re preparing a curated set of interview Q&amp;A specifically for the IaC &amp; CI/CD Migration project. Check back soon!
+                  </p>
                 </div>
               </div>
             );

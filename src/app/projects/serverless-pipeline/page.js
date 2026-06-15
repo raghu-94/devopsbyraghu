@@ -42,6 +42,12 @@ export default function ServerlessPipelineProject() {
         { id: "chaos", title: "🔥 Test Your Knowledge" },
         { id: "destroy", title: "6. 🗑️ Destroy Resources" }
       ]
+    },
+    {
+      title: "Interview Prep",
+      items: [
+        { id: "interview", title: "🎙️ Interview Q&A" }
+      ]
     }
   ];
 
@@ -630,6 +636,57 @@ resource "aws_lambda_event_source_mapping" "sqs_trigger" {
                     </li>
                   </ul>
                 </div>
+              </div>
+            );
+          case "interview":
+            return (
+              <div>
+                {/* Divider */}
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "0 0 32px" }}>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                  <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--g-text-muted)" }}>Interview Preparation</span>
+                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, var(--g-border), transparent)" }} />
+                </div>
+
+                <h2>🎙️ Interview Q&A: AWS Serverless Pipeline</h2>
+                <p className="guide-subtitle">Serverless proves you understand cost optimization and decoupled architectures.</p>
+
+                {[
+                  {
+                    q: "Q1. Why did you use SQS between S3 and Lambda? Why not trigger Lambda directly from S3?",
+                    a: "Decoupling and fault tolerance. If 10,000 users upload an image to S3 at the exact same second, triggering Lambda directly might hit concurrency limits and drop requests. By putting an SQS Queue in the middle, the queue acts as a shock absorber. The messages wait safely in the queue, and Lambda pulls them at its own pace. No data is lost.",
+                    highlight: "shock absorber"
+                  },
+                  {
+                    q: "Q2. What is a Dead Letter Queue (DLQ) in SQS?",
+                    a: "If a message in SQS is picked up by Lambda, but the Lambda function crashes (e.g., bad code), the message goes back to the queue. If it fails repeatedly, SQS will move that \"poison pill\" message into a Dead Letter Queue (DLQ). This prevents the bad message from clogging up the main queue forever, and allows engineers to manually inspect why it failed."
+                  },
+                  {
+                    q: "Q3. What is \"Least Privilege\" in IAM, and how did you apply it to your Lambda function?",
+                    a: "Least Privilege means giving an entity only the exact permissions it needs to do its job, and nothing more. I did not give Lambda \"AdministratorAccess\". I created a specific IAM Role that only allowed `sqs:ReceiveMessage` on one specific queue ARN, and `dynamodb:PutItem` on one specific table ARN. If the Lambda is hacked, the hacker cannot touch the rest of our AWS account."
+                  },
+                  {
+                    q: "Q4. What is a \"Cold Start\" in AWS Lambda?",
+                    a: "When a Lambda function hasn't been triggered in a while, AWS spins down the underlying container to save money. When a new request comes in, AWS has to provision a new container and load the Python runtime, which adds a few seconds of latency. This is called a Cold Start. To mitigate this for highly-sensitive APIs, you can use \"Provisioned Concurrency\" to keep containers warm."
+                  },
+                  {
+                    q: "Q5. Why did you choose DynamoDB instead of an RDS MySQL database?",
+                    a: "DynamoDB is a managed NoSQL database that perfectly fits serverless architectures. Unlike RDS, there are no persistent database connections to manage (which Lambda struggles with at high scale). It handles millions of requests per second effortlessly via HTTP APIs, and you only pay for the exact read/write operations you consume."
+                  }
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    background: "var(--g-surface)", border: "1px solid var(--g-border)",
+                    borderRadius: "12px", padding: "20px 24px", marginBottom: "16px"
+                  }}>
+                    <div style={{ fontSize: "1rem", fontWeight: 600, color: "var(--g-text-bright)", marginBottom: "12px", display: "flex", gap: "10px" }}>
+                      <span style={{ color: "#ff9900" }}>{item.q.split('.')[0]}.</span>
+                      <span>{item.q.split('.').slice(1).join('.')}</span>
+                    </div>
+                    <div style={{ color: "var(--g-text-muted)", fontSize: "0.88rem", paddingLeft: "36px", lineHeight: 1.7 }}>
+                      <p><strong>Answer:</strong> {item.a}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             );
           default:
