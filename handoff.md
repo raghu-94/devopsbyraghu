@@ -1,6 +1,6 @@
 # Handoff - DevOps by Raghu Landing Page & Learning Hub
 
-This document provides a complete handoff summary of the Next.js migration, unified styling, visual updates, custom media assets integration, and GitHub deployment.
+This document provides a complete handoff summary of the Next.js migration, unified styling, visual updates, custom media assets integration, AWS VPN Wizard implementation, Project Interview Q&A additions, and GitHub deployment.
 
 ## 📌 Project Overview
 - **Project Directory**: `C:\Users\gragh\OneDrive\Desktop\devopsden\project`
@@ -15,7 +15,8 @@ This document provides a complete handoff summary of the Next.js migration, unif
 ## ✅ Summary of Achievements
 
 ### 1. Unified Learning Hub Migration
-- Migrated 7 foundational guide pages and 3 project guide pages to Next.js App Router:
+- Migrated 8 foundational guide pages and 3 project guide pages to Next.js App Router:
+  - **AWS VPN Wizard**: `/guides/aws-vpn-wizard` (NEW)
   - Docker Mastery: `/guides/docker`
   - Dockerfile Best Practices: `/guides/dockerfile-guide`
   - Jenkins CI/CD: `/guides/jenkins`
@@ -28,18 +29,33 @@ This document provides a complete handoff summary of the Next.js migration, unif
   - Serverless CI/CD Pipeline: `/projects/serverless-pipeline`
 - Reorganized and wrapped all pages with the unified styling system (`guide-theme.css` + `GuideWrapper`).
 
-### 2. Guide Cards Reordering & "Coming Soon" Placeholders
-- Rearranged the core guides in the landing page `toolsList` array to follow a logical development-to-production pipeline:
-  1. **DevOps Terminology**: Foundational knowledge.
-  2. **Python Automation**: Writing scripting and local automation code.
-  3. **Docker Mastery**: Containerizing code locally.
-  4. **Dockerfile Best Practices**: Hardening and optimizing images for production.
-  5. **Jenkins CI/CD**: Automating build and delivery pipelines.
-  6. **Kubernetes Mastery**: Orchestrating containers at production scale.
-  7. **Monitoring & Metrics**: Implementing production visibility (Prometheus/Grafana).
-- **Added a "More Tool Guides" placeholder card** at the end of the Core DevOps Toolkits section with a dashed border, upcoming badge, and locked state to indicate that guides for Terraform, Git, GitHub Actions, and Ansible are under development.
+### 2. AWS VPN Wizard Guide
+- Built a highly interactive, dynamic client-side guide at `/guides/aws-vpn-wizard` to assist users with complex site-to-site VPN setups.
+- Features:
+  - **Dynamic CIDR Customizer**: personalizes all subnets, route tables, security groups, and configuration files across all steps.
+  - **Strongswan Config File Parser**: reads configuration files generated from AWS to extract Customer Gateway IPs, Tunnel IPs, and PSKs.
+  - **Configuration Generator**: dynamically compiles config snippets for `/etc/ipsec.conf`, `/etc/ipsec.secrets`, and a helper `updown` bash script based on parsed config inputs.
+  - **Cleanup Checklist**: interactive checklists to ensure users teardown non-free resources to avoid unwanted charges.
 
-### 3. Visual & Logo Refinements
+### 3. Interview Q&A Sections
+- Added styled horizontal dividers and custom-designed interactive accordion panels for interview preparation at the bottom of all three project pages:
+  - **IaC Migration**: Added a standard section with a "Coming Soon" placeholder since no HTML QA files were available.
+  - **K8s GitOps Deployment**: Added 5 senior-level questions covering GitOps theory, config drift self-healing, StatefulSets, Sealed/External Secrets, and CrashLoopBackOff debugging.
+  - **Serverless CI/CD Pipeline**: Added 5 questions covering event-driven queue buffering (SQS), Dead Letter Queues (DLQ), Least Privilege IAM design, Lambda cold-start tuning, and NoSQL (DynamoDB) scaling.
+
+### 4. Guide Cards Reordering & Stats Counter
+- Rearranged the core guides in the landing page `toolsList` array to follow a logical development-to-production pipeline:
+  1. DevOps Terminology
+  2. Python Automation
+  3. Docker Mastery
+  4. Dockerfile Best Practices
+  5. Jenkins CI/CD
+  6. Kubernetes Mastery
+  7. Monitoring & Metrics
+  8. **AWS VPN Wizard** (Added as Card #8)
+- Updated the stats banner counter-up animation target for `tools` from `7+` to `8+`.
+
+### 5. Visual & Logo Refinements
 - **AWS Logo Contrast Fix**: In [aws.svg](file:///c:/Users/gragh/OneDrive/Desktop/devopsden/project/public/images/logos/aws.svg), modified the text fill from dark charcoal (`#252f3e`) to white (`#ffffff`). It is now perfectly visible against the dark project tool stacks.
 - **Custom DevOps Terminology Image**: Integrated the user-provided illustration at [terminology.png](file:///c:/Users/gragh/OneDrive/Desktop/devopsden/project/public/images/terminology.png) onto the Terminology card.
 - **Custom About Avatar**: Replaced the CSS text placeholder in the About section with the custom stylized "R" image at [about-r-logo.jpg](file:///c:/Users/gragh/OneDrive/Desktop/devopsden/project/public/images/about-r-logo.jpg).
@@ -49,10 +65,10 @@ This document provides a complete handoff summary of the Next.js migration, unif
   - About **DevOps by Raghu**
 - **Avatar Micro-Animations**: Configured the About section avatar image to scale up (`scale(1.06)`) and rotate slightly (`rotate(3deg)`) on hover for an interactive, premium feel.
 
-### 4. Code Correctness & Build Stability
+### 6. Code Correctness & Build Stability
 - **SSR reference fixes**: Tracked client-side hydration (`mounted` state) in `GuideWrapper.js` to prevent server-side `ReferenceError: window is not defined` crashes.
 - **JSX compilation fixes**: Escaped raw HTML statement arrows (`->` to `&rarr;`) in guides to allow Next.js compilation.
-- **Verified Build**: Rebuilt Next.js cleanly (`npm run build`). All 14 static route pages compile with no errors.
+- **Verified Build**: Rebuilt Next.js cleanly (`npm run build`). All 15 static route pages compile with no errors.
 
 ---
 
@@ -65,6 +81,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Git Sync:
-All changes are pushed to GitHub:
-- Branch: `main`
-- Remote: `origin`
+All changes have been successfully committed and pushed to GitHub:
+- **Branch**: `main`
+- **Remote**: `origin`
+- Deployment automatically triggers on Vercel upon push.
