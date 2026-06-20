@@ -424,10 +424,16 @@ export default function Home() {
           <div className="about-bio">
             <h3>Hi, I&apos;m Raghu</h3>
             <p>
-              I build and scale infrastructure. Over the years, I noticed that breaking into DevOps is tough because guides are either too theoretical or locked behind expensive subscriptions and corporate walls.
+              Most DevOps resources teach tools in isolation — I wanted to understand how they actually connect in a real production environment. No course or guide was giving me that, so I took a different approach.
             </p>
             <p>
-              I created this platform to share completely free, highly technical, and production-tested guides. Every guide here is structured as an interactive lab so you learn by doing, troubleshooting errors, and deploying real code.
+              I started reverse engineering production-grade architectures myself — breaking them down, rebuilding them from scratch, and documenting every error, every fix, and every decision along the way.
+            </p>
+            <p>
+              This platform is the result of that process. Every guide and project here is built the way I wished someone had taught me — hands-on, end-to-end, with real errors and real solutions, not just happy path walkthroughs.
+            </p>
+            <p>
+              If you&apos;re tired of theoretical guides that fall apart the moment you try to actually build something — this is for you.
             </p>
           </div>
         </div>
