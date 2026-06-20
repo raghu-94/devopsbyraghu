@@ -70,6 +70,12 @@ This document provides a complete handoff summary of the Next.js migration, unif
 - **JSX compilation fixes**: Escaped raw HTML statement arrows (`->` to `&rarr;`) in guides to allow Next.js compilation.
 - **Verified Build**: Rebuilt Next.js cleanly (`npm run build`). All 15 static route pages compile with no errors.
 
+### 7. Latest Additions & Fixes (Current Session)
+- **Terraform Mastery Guide**: Ported the complete 5-stage Terraform guide with interactive elements (Quizzes, Concept Boxes, Warning cards) into the Next.js router. Fixed JSX escaping syntax errors for a smooth build.
+- **Git Mastery Guide**: Built a custom node script (`convert.js`) to programmatically parse and port the massive `git-mastery-guide.html` into a Next.js `page.js` file with all correct React wrapper components. Added the Git logo and listed it under the Foundations toolkit.
+- **About Section Refresh**: Updated the homepage "About" section script to reflect the new powerful, problem-solving narrative based on your personal feedback.
+- **Smooth-Scrolling Fix**: Fixed a native Next.js `<Link>` routing bug where clicking "Get Started" buttons multiple times ignored subsequent scrolls. Implemented an explicit `onClick={() => scrollIntoView()}` handler to guarantee reliable navigation.
+
 ---
 
 ## 🏃 Next Steps & Running instructions
