@@ -229,7 +229,7 @@ export default function Home() {
           <li><Link href="#projects" className="nav-link">Projects</Link></li>
           <li><Link href="#about" className="nav-link">About</Link></li>
         </ul>
-        <Link href="#guides" className="nav-cta-btn">Get started</Link>
+        <Link href="#guides" className="nav-cta-btn" onClick={() => document.getElementById('guides')?.scrollIntoView({ behavior: 'smooth' })}>Get started</Link>
         <button 
           className="mobile-nav-toggle"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -261,7 +261,7 @@ export default function Home() {
           <Link href="#guides" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Guides</Link>
           <Link href="#projects" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Projects</Link>
           <Link href="#about" className="nav-link" onClick={() => setMobileMenuOpen(false)}>About</Link>
-          <Link href="#guides" className="nav-cta-btn" style={{ textAlign: "center" }} onClick={() => setMobileMenuOpen(false)}>Get started</Link>
+          <Link href="#guides" className="nav-cta-btn" style={{ textAlign: "center" }} onClick={() => { setMobileMenuOpen(false); document.getElementById('guides')?.scrollIntoView({ behavior: 'smooth' }); }}>Get started</Link>
         </div>
       )}
 
@@ -446,7 +446,7 @@ export default function Home() {
           <p>
             Start with the DevOps Terminology guide or dive straight into one of the containerization labs.
           </p>
-          <Link href="#guides">
+          <Link href="#guides" onClick={() => document.getElementById('guides')?.scrollIntoView({ behavior: 'smooth' })}>
             <button>Get Started Now</button>
           </Link>
         </div>
