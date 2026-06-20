@@ -5,9 +5,12 @@ export const metadata = {
   description: "Real-world, hands-on production-grade DevOps projects with step-by-step instructions.",
 };
 
+import DisclaimerModal from "@/components/DisclaimerModal";
+
 export default function ProjectsLayout({ children }) {
   return (
     <div className="projects-root">
+      <DisclaimerModal />
       {children}
     </div>
   );
