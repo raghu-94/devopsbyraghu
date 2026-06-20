@@ -338,7 +338,7 @@ export default function Home() {
                 Upcoming
               </span>
               <h3>More Tool Guides</h3>
-              <p>Mastery guides for Terraform, Git, GitHub Actions, Ansible, and other essential DevOps tools are under development.</p>
+              <p>Mastery guides for Git, GitHub Actions, Ansible, and other essential DevOps tools are under development.</p>
               <div className="card-meta">
                 <span>Coming Soon</span>
                 <span className="card-action" style={{ color: "var(--light-text-muted)" }}>Locked</span>
