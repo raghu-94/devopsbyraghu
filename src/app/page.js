@@ -76,7 +76,7 @@ export default function Home() {
   const animateStats = () => {
     const duration = 2000; // 2 seconds
     const startTime = performance.now();
-    const targets = { tools: 8, projects: 3, free: 100 };
+    const targets = { tools: 9, projects: 3, free: 100 };
 
     const updateCounters = (currentTime) => {
       const elapsedTime = currentTime - startTime;
@@ -171,6 +171,15 @@ export default function Home() {
       route: "/guides/aws-vpn-wizard",
       meta: "31 Steps · Est. 3h",
       image: "/images/logos/aws.svg"
+    },
+    {
+      name: "Terraform Mastery",
+      badge: "Beginner to Expert",
+      badgeClass: "expert",
+      desc: "Learn Infrastructure as Code from scratch. Master the core workflow, state management, modules, and CI/CD pipelines.",
+      route: "/guides/terraform",
+      meta: "25 Labs · Est. 8h",
+      image: "/images/logos/terraform.svg"
     }
   ];
 
