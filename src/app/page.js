@@ -180,6 +180,15 @@ export default function Home() {
       route: "/guides/terraform",
       meta: "25 Labs · Est. 8h",
       image: "/images/logos/terraform.svg"
+    },
+    {
+      name: "Git Mastery",
+      badge: "Beginner to Advanced",
+      badgeClass: "advanced",
+      desc: "From first commit to production branching strategy — no fluff, just the commands working engineers actually use.",
+      route: "/guides/git",
+      meta: "5 Stages · Est. 4h",
+      image: "/images/logos/git.svg"
     }
   ];
 
@@ -338,7 +347,7 @@ export default function Home() {
                 Upcoming
               </span>
               <h3>More Tool Guides</h3>
-              <p>Mastery guides for Git, GitHub Actions, Ansible, and other essential DevOps tools are under development.</p>
+              <p>Mastery guides for GitHub Actions, Ansible, and other essential DevOps tools are under development.</p>
               <div className="card-meta">
                 <span>Coming Soon</span>
                 <span className="card-action" style={{ color: "var(--light-text-muted)" }}>Locked</span>
