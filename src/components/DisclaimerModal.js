@@ -51,10 +51,13 @@ export default function DisclaimerModal() {
         </h2>
         <div style={{ color: "var(--g-text-muted, #a3a3a3)", lineHeight: "1.6", fontSize: "1.05rem" }}>
           <p style={{ marginBottom: "16px", marginTop: 0 }}>
-            This mastery guide/project might contain some errors or outdated steps. You may encounter them during your practice.
+            The DevOps ecosystem evolves rapidly. As you work through this material, you may occasionally encounter unexpected errors, deprecation warnings, or slight UI changes in the tools.
+          </p>
+          <p style={{ marginBottom: "16px", marginTop: 0 }}>
+            <strong>Embrace these moments.</strong> Real-world engineering isn't about following a perfect tutorial—it's about debugging when things break.
           </p>
           <p style={{ marginBottom: "32px", marginTop: 0 }}>
-            We want you to tackle these errors by yourself or by using an AI assistant. Troubleshooting and debugging are crucial real-world skills for your IT career, where you will need to solve these kinds of errors independently.
+            We challenge you to tackle these hurdles independently. Consult the official documentation, leverage an AI assistant, and troubleshoot the root cause. Developing the resilience to solve unscripted problems is the single most valuable skill you can build for your IT career.
           </p>
         </div>
         <button 
