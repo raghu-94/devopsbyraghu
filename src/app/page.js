@@ -76,7 +76,7 @@ export default function Home() {
   const animateStats = () => {
     const duration = 2000; // 2 seconds
     const startTime = performance.now();
-    const targets = { tools: 9, projects: 3, free: 100 };
+    const targets = { tools: 10, projects: 3, free: 100 };
 
     const updateCounters = (currentTime) => {
       const elapsedTime = currentTime - startTime;
@@ -189,6 +189,15 @@ export default function Home() {
       route: "/guides/git",
       meta: "5 Stages · Est. 4h",
       image: "/images/logos/git.svg"
+    },
+    {
+      name: "GitHub Actions Mastery",
+      badge: "Beginner to Advanced",
+      badgeClass: "advanced",
+      desc: "From just wanting tests to run automatically to running your production deploy pipeline.",
+      route: "/guides/github-actions",
+      meta: "5 Stages · Est. 4h",
+      image: "/images/logos/github-actions.svg"
     }
   ];
 
