@@ -551,11 +551,11 @@ gh run watch`} title="Push it, watch it pass, then break it on purpose"></CodeBl
               <div>
                 
   <h2>2.2 Contexts &amp; expressions <span className="badge intermediate">Intermediate</span></h2>
-  <p className="subtitle">Stage 2 · Triggers &amp; Logic — the <code className="inline">${{ }}</code> syntax, demystified</p>
+  <p className="subtitle">Stage 2 · Triggers &amp; Logic — the <code className="inline">{"${{ }}"}</code> syntax, demystified</p>
 
   <ConceptBox title="Why this matters">
     
-    Every <code className="inline">${{ ... }}</code> block you've copy-pasted so far is an <strong>expression</strong> evaluating against a <strong>context</strong> — structured data GitHub exposes about the run, the event, your repo, and your secrets. Once this clicks, you stop treating workflow YAML as magic incantations and start reading it like a small, predictable scripting language.
+    Every <code className="inline">{"${{ ... }}"}</code> block you've copy-pasted so far is an <strong>expression</strong> evaluating against a <strong>context</strong> — structured data GitHub exposes about the run, the event, your repo, and your secrets. Once this clicks, you stop treating workflow YAML as magic incantations and start reading it like a small, predictable scripting language.
   </ConceptBox>
 
   <table>
@@ -581,7 +581,7 @@ gh run watch`} title="Push it, watch it pass, then break it on purpose"></CodeBl
           echo 'Event: \$\{\{ github.event_name \}\}'
           echo 'Branch: \$\{\{ github.ref_name \}\}'`} title="Terminal"></CodeBlock>
 
-  <TipBox title="Where to explore this"> Add a temporary step <code className="inline">run: echo '${{ toJSON(github) }}'</code> to any job and look at its log output in the Actions tab — it dumps the entire <code className="inline">github</code> context as JSON so you can see exactly what's available instead of guessing field names.</TipBox>
+  <TipBox title="Where to explore this"> Add a temporary step <code className="inline">{"run: echo '${{ toJSON(github) }}'"}</code> to any job and look at its log output in the Actions tab — it dumps the entire <code className="inline">github</code> context as JSON so you can see exactly what's available instead of guessing field names.</TipBox>
 
   <ErrorCard error="⚠️ if: condition silently never matches" meaning="(step shows as 'skipped' every single run, even on main)" fix="Scenario: You wrote if: ${{ github.ref_name == 'main' }} — wrapping an if: condition in ${{ }} is actually valid, but a far more common bug is comparing github.ref (which is the full refs/heads/main string) against just 'main', which will never be equal.
       Fix: Use github.ref_name (just the branch name, e.g. main) when you want a plain comparison, and reserve github.ref for cases where you specifically need the full ref path, like distinguishing branches from tags."></ErrorCard>
@@ -737,7 +737,7 @@ gh run watch`} title="Push and confirm the matrix fans out"></CodeBlock>
 
   <Quiz question="Q: Why does notify need if: always()?" answer="By default, a job with a needs dependency only runs if every dependency succeeded. Without if: always(), if any matrix combination fails, notify would be skipped entirely — and you'd lose the chance to actually report the failure. always() overrides the default and forces the job to run regardless of upstream success or failure."></Quiz>
 
-  <div className="g-checklist"><ul classname="g-checklist"><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-0" /><label htmlfor="gha-cb-s2l5-0">I scoped triggers to specific branches instead of "every push, everywhere"</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-1" /><label htmlfor="gha-cb-s2l5-1">I can read a ${{ }} expression against the right context</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-2" /><label htmlfor="gha-cb-s2l5-2">I used needs to pass an output from one job to another</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-3" /><label htmlfor="gha-cb-s2l5-3">I ran a matrix build and watched it fan out into parallel jobs</label></li></ul></div>
+  <div className="g-checklist"><ul classname="g-checklist"><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-0" /><label htmlfor="gha-cb-s2l5-0">I scoped triggers to specific branches instead of "every push, everywhere"</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-1" /><label htmlfor="gha-cb-s2l5-1">I can read a {"${{ }}"} expression against the right context</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-2" /><label htmlfor="gha-cb-s2l5-2">I used needs to pass an output from one job to another</label></li><li classname="g-checklist-item"><input type="checkbox" classname="g-guide-cb" id="gha-cb-s2l5-3" /><label htmlfor="gha-cb-s2l5-3">I ran a matrix build and watched it fan out into parallel jobs</label></li></ul></div>
 
   
 
@@ -1408,7 +1408,7 @@ gh run rerun <run-id> --debug`} title="Re-run with debug logging when the normal
 
   <p>Just like you tagged Docker images locally with a version before pushing to a registry, this tags every image with the exact commit SHA that built it — so "what's actually running in production" is always traceable back to one specific commit, never a vague "latest."</p>
 
-  <TipBox title="Where this connects to Kubernetes"> A common next step (not built in this guide) is a final job that runs <code className="inline">kubectl set image deployment/app app=ghcr.io/...:${{ github.sha }}</code> against a cluster, or — more safely for production — updates a GitOps repo that a tool like Argo CD watches, so the actual cluster change goes through its own review and reconciliation rather than a direct push from CI.</TipBox>
+  <TipBox title="Where this connects to Kubernetes"> A common next step (not built in this guide) is a final job that runs <code className="inline">{"kubectl set image deployment/app app=ghcr.io/...:${{ github.sha }}"}</code> against a cluster, or — more safely for production — updates a GitOps repo that a tool like Argo CD watches, so the actual cluster change goes through its own review and reconciliation rather than a direct push from CI.</TipBox>
 
   
 
