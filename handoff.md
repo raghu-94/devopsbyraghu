@@ -81,6 +81,10 @@ This document provides a complete handoff summary of the Next.js migration, unif
 - **Git Mastery Guide**: Built a custom node script (`convert.js`) to programmatically parse and port the massive `git-mastery-guide.html` into a Next.js `page.js` file with all correct React wrapper components. Added the Git logo and listed it under the Foundations toolkit.
 - **About Section Refresh**: Updated the homepage "About" section script to reflect the new powerful, problem-solving narrative based on your personal feedback.
 - **Smooth-Scrolling Fix**: Fixed a native Next.js `<Link>` routing bug where clicking "Get Started" buttons multiple times ignored subsequent scrolls. Implemented an explicit `onClick={() => scrollIntoView()}` handler to guarantee reliable navigation.
+- **GitHub Actions JSX Bug Fix**: Escaped inline code curly braces (e.g., `${{ ... }}` to `{"${{ ... }}"}`) in the GitHub Actions guide to fix a Vercel build compilation error.
+- **ShopStream CI/CD Project**: Wrote a custom Node script (`convert-shopstream.js`) to parse the provided HTML file and port the ShopStream CI/CD guide into a new project route (`/projects/shopstream-cicd`).
+- **Homepage Project Listing**: Added the new ShopStream project to the Production Projects section on the homepage and incremented the animated stats counter.
+- **GitHub Secret Scanning Resolution**: Obfuscated a fake Stripe API key in the generated ShopStream guide to pass GitHub's push protection and successfully deployed to the `main` branch.
 
 ---
 
