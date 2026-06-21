@@ -76,7 +76,7 @@ export default function Home() {
   const animateStats = () => {
     const duration = 2000; // 2 seconds
     const startTime = performance.now();
-    const targets = { tools: 10, projects: 3, free: 100 };
+    const targets = { tools: 10, projects: 4, free: 100 };
 
     const updateCounters = (currentTime) => {
       const elapsedTime = currentTime - startTime;
@@ -231,6 +231,16 @@ export default function Home() {
       meta: "GitHub Actions · Lambda · SAM",
       accent: "Serverless CD",
       tools: ["python", "github-actions", "aws"]
+    },
+    {
+      name: "ShopStream CI/CD Pipeline",
+      badge: "Expert",
+      badgeClass: "expert",
+      desc: "GitHub Actions + ArgoCD · AWS EKS · Production-Grade GitOps pipeline for a microservices architecture.",
+      route: "/projects/shopstream-cicd",
+      meta: "GitHub Actions · ArgoCD · K8s · AWS",
+      accent: "GitOps CI/CD",
+      tools: ["github-actions", "kubernetes", "aws", "docker"]
     }
   ];
 
