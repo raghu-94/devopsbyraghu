@@ -742,21 +742,21 @@ jobs:                      # One or more parallel jobs
 
   <h3>How GitHub Expressions Work</h3>
   <ConceptBox title="Expressions let you make workflows dynamic">
-     You'll use them constantly. The syntax is <code>{"${{ expression }}}</code>. These are evaluated at runtime on the runner.
+     You'll use them constantly. The syntax is <code>${"{"}{"{"} expression {"}"}{"}"}</code>. These are evaluated at runtime on the runner.
   </ConceptBox>
 <CodeBlock code={`# Common expressions you'll use in ShopStream
-\{"${{ github.sha }}}           # Full commit SHA (e.g. a3f8d92c...) — used as image tag
-\{"${{ github.sha[0:7] }}}      # Short SHA (first 7 chars)
-\{"${{ github.ref_name }}}      # Branch name (e.g. main, feature/new-checkout)
-\{"${{ github.event_name }}}    # What triggered the run (push, pull_request)
-\{"${{ github.actor }}}         # Username who triggered the workflow
-\{"${{ github.repository }}}    # owner/repo (e.g. shopstream/app)
+\${{ github.sha }}           # Full commit SHA (e.g. a3f8d92c...) — used as image tag
+\${{ github.sha[0:7] }}      # Short SHA (first 7 chars)
+\${{ github.ref_name }}      # Branch name (e.g. main, feature/new-checkout)
+\${{ github.event_name }}    # What triggered the run (push, pull_request)
+\${{ github.actor }}         # Username who triggered the workflow
+\${{ github.repository }}    # owner/repo (e.g. shopstream/app)
 
 # Context objects
-\{"${{ env.AWS_REGION }}}       # From env: block
-\{"${{ secrets.ECR_REGISTRY }}} # From repo Settings → Secrets
-\{"${{ vars.ENVIRONMENT }}}     # From repo Settings → Variables (non-secret)
-\{"${{ steps.build.outputs.image_tag }}}  # Output from a previous step named 'build'`} title="Terminal"></CodeBlock>
+\${{ env.AWS_REGION }}       # From env: block
+\${{ secrets.ECR_REGISTRY }} # From repo Settings → Secrets
+\${{ vars.ENVIRONMENT }}     # From repo Settings → Variables (non-secret)
+\${{ steps.build.outputs.image_tag }}  # Output from a previous step named 'build'`} title="Terminal"></CodeBlock>
 
   <Quiz question="❓ Quiz — A workflow has two jobs: test and build. You add needs: [test] to the build job. What happens if the test job fails?" answer="The build job is skipped entirely. When you use needs:, GitHub Actions won't start the dependent job if any of its dependencies fail or are skipped. This is exactly what you want: if tests fail, don't build a broken image. The workflow will show as failed (red) because the test job failed, even though the build job was never attempted. You can override this with if: always() on specific steps (e.g. for cleanup), but for production pipelines you always want failures to block downstream jobs."></Quiz>
 
@@ -948,7 +948,7 @@ CMD ['node', 'src/index.js']`} title="Terminal"></CodeBlock>
       contents: read
 
     outputs:
-      image_tag: \{"${{ steps.meta.outputs.tag }}}   # Pass tag to next job
+      image_tag: \${{ steps.meta.outputs.tag }}   # Pass tag to next job
 
     steps:
       - name: Checkout
@@ -957,7 +957,7 @@ CMD ['node', 'src/index.js']`} title="Terminal"></CodeBlock>
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::\{"${{ secrets.AWS_ACCOUNT_ID }}}:role/github-actions-ecr-role
+          role-to-assume: arn:aws:iam::\${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-ecr-role
           aws-region: ap-south-1
 
       - name: Login to Amazon ECR
@@ -968,9 +968,9 @@ CMD ['node', 'src/index.js']`} title="Terminal"></CodeBlock>
       - name: Generate image metadata
         id: meta
         run: |
-          SHORT_SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
+          SHORT_SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
           TAG='\${SHORT_SHA}'
-          REGISTRY='\{"${{ steps.login-ecr.outputs.registry }}}'
+          REGISTRY='\${{ steps.login-ecr.outputs.registry }}'
           IMAGE='\${REGISTRY}/shopstream/product-catalog:\${TAG}'
           echo 'tag=\${TAG}' >> \$GITHUB_OUTPUT
           echo 'image=\${IMAGE}' >> \$GITHUB_OUTPUT
@@ -986,21 +986,21 @@ CMD ['node', 'src/index.js']`} title="Terminal"></CodeBlock>
         with:
           context: ./services/product-catalog
           push: true
-          tags: \{"${{ steps.meta.outputs.image }}}
-          cache-from: type=registry,ref=\{"${{ steps.meta.outputs.registry }}}/shopstream/product-catalog:cache
-          cache-to: type=registry,ref=\{"${{ steps.meta.outputs.registry }}}/shopstream/product-catalog:cache,mode=max
+          tags: \${{ steps.meta.outputs.image }}
+          cache-from: type=registry,ref=\${{ steps.meta.outputs.registry }}/shopstream/product-catalog:cache
+          cache-to: type=registry,ref=\${{ steps.meta.outputs.registry }}/shopstream/product-catalog:cache,mode=max
 
       # Image vulnerability scan — block deploy if CRITICAL CVEs found
       - name: Run ECR image scan
         run: |
           aws ecr wait image-scan-complete \\
             --repository-name shopstream/product-catalog \\
-            --image-id imageTag=\{"${{ steps.meta.outputs.tag }}} \\
+            --image-id imageTag=\${{ steps.meta.outputs.tag }} \\
             --region ap-south-1
 
           CRITICAL=\$(aws ecr describe-image-scan-findings \\
             --repository-name shopstream/product-catalog \\
-            --image-id imageTag=\{"${{ steps.meta.outputs.tag }}} \\
+            --image-id imageTag=\${{ steps.meta.outputs.tag }} \\
             --query 'imageScanFindings.findingSeverityCounts.CRITICAL' \\
             --output text)
 
@@ -1254,8 +1254,8 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: \{"${{ secrets.AWS_ROLE_ARN }}}
-          role-session-name: shopstream-ci-\{"${{ github.run_id }}}
+          role-to-assume: \${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: shopstream-ci-\${{ github.run_id }}
           aws-region: ap-south-1
           # No access-key-id or secret-access-key needed!
 
@@ -1337,19 +1337,19 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: services/\{"${{ env.SERVICE }}}/package-lock.json
+          cache-dependency-path: services/\${{ env.SERVICE }}/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: services/\{"${{ env.SERVICE }}}
+        working-directory: services/\${{ env.SERVICE }}
 
       - name: Lint
         run: npm run lint
-        working-directory: services/\{"${{ env.SERVICE }}}
+        working-directory: services/\${{ env.SERVICE }}
 
       - name: Unit + integration tests
         run: npm test -- --coverage
-        working-directory: services/\{"${{ env.SERVICE }}}
+        working-directory: services/\${{ env.SERVICE }}
         env:
           DATABASE_URL: postgresql://shopstream:testpassword@localhost:5432/shopstream_test
           NODE_ENV: test
@@ -1368,8 +1368,8 @@ jobs:
       contents: read
 
     outputs:
-      image_tag: \{"${{ steps.meta.outputs.tag }}}
-      image_uri: \{"${{ steps.meta.outputs.uri }}}
+      image_tag: \${{ steps.meta.outputs.tag }}
+      image_uri: \${{ steps.meta.outputs.uri }}
 
     steps:
       - uses: actions/checkout@v4
@@ -1377,9 +1377,9 @@ jobs:
       - name: Configure AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: \{"${{ secrets.AWS_ROLE_ARN }}}
-          role-session-name: ci-\{"${{ env.SERVICE }}}-\{"${{ github.run_id }}}
-          aws-region: \{"${{ env.AWS_REGION }}}
+          role-to-assume: \${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: ci-\${{ env.SERVICE }}-\${{ github.run_id }}
+          aws-region: \${{ env.AWS_REGION }}
 
       - name: Login to ECR
         id: ecr-login
@@ -1388,9 +1388,9 @@ jobs:
       - name: Generate image metadata
         id: meta
         run: |
-          SHORT_SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
-          REGISTRY='\{"${{ steps.ecr-login.outputs.registry }}}'
-          URI='\${REGISTRY}/shopstream/\{"${{ env.SERVICE }}}:\${SHORT_SHA}'
+          SHORT_SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
+          REGISTRY='\${{ steps.ecr-login.outputs.registry }}'
+          URI='\${REGISTRY}/shopstream/\${{ env.SERVICE }}:\${SHORT_SHA}'
           echo 'tag=\${SHORT_SHA}' >> \$GITHUB_OUTPUT
           echo 'uri=\${URI}' >> \$GITHUB_OUTPUT
           echo 'registry=\${REGISTRY}' >> \$GITHUB_OUTPUT
@@ -1402,29 +1402,29 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: services/\{"${{ env.SERVICE }}}
+          context: services/\${{ env.SERVICE }}
           push: true
           tags: |
-            \{"${{ steps.meta.outputs.uri }}}
-            \{"${{ steps.ecr-login.outputs.registry }}}/shopstream/\{"${{ env.SERVICE }}}:latest
-          cache-from: type=registry,ref=\{"${{ steps.ecr-login.outputs.registry }}}/shopstream/\{"${{ env.SERVICE }}}:cache
-          cache-to: type=registry,ref=\{"${{ steps.ecr-login.outputs.registry }}}/shopstream/\{"${{ env.SERVICE }}}:cache,mode=max
+            \${{ steps.meta.outputs.uri }}
+            \${{ steps.ecr-login.outputs.registry }}/shopstream/\${{ env.SERVICE }}:latest
+          cache-from: type=registry,ref=\${{ steps.ecr-login.outputs.registry }}/shopstream/\${{ env.SERVICE }}:cache
+          cache-to: type=registry,ref=\${{ steps.ecr-login.outputs.registry }}/shopstream/\${{ env.SERVICE }}:cache,mode=max
           labels: |
-            git.commit=\{"${{ github.sha }}}
-            git.branch=\{"${{ github.ref_name }}}
-            built.at=\{"${{ github.run_id }}}
+            git.commit=\${{ github.sha }}
+            git.branch=\${{ github.ref_name }}
+            built.at=\${{ github.run_id }}
 
       - name: Wait for ECR scan &amp; verify
         run: |
           echo 'Waiting for vulnerability scan...'
           aws ecr wait image-scan-complete \\
-            --repository-name shopstream/\{"${{ env.SERVICE }}} \\
-            --image-id imageTag=\{"${{ steps.meta.outputs.tag }}} \\
-            --region \{"${{ env.AWS_REGION }}} || true
+            --repository-name shopstream/\${{ env.SERVICE }} \\
+            --image-id imageTag=\${{ steps.meta.outputs.tag }} \\
+            --region \${{ env.AWS_REGION }} || true
 
           CRITICAL=\$(aws ecr describe-image-scan-findings \\
-            --repository-name shopstream/\{"${{ env.SERVICE }}} \\
-            --image-id imageTag=\{"${{ steps.meta.outputs.tag }}} \\
+            --repository-name shopstream/\${{ env.SERVICE }} \\
+            --image-id imageTag=\${{ steps.meta.outputs.tag }} \\
             --query 'imageScanFindings.findingSeverityCounts.CRITICAL' \\
             --output text 2>/dev/null || echo '0')
 
@@ -1438,10 +1438,10 @@ jobs:
           echo '## 🐳 Image Published' >> \$GITHUB_STEP_SUMMARY
           echo '| Key | Value |' >> \$GITHUB_STEP_SUMMARY
           echo '|-----|-------|' >> \$GITHUB_STEP_SUMMARY
-          echo '| Service | \{"${{ env.SERVICE }}} |' >> \$GITHUB_STEP_SUMMARY
-          echo '| Tag | \\\`\{"${{ steps.meta.outputs.tag }}}\\\` |' >> \$GITHUB_STEP_SUMMARY
-          echo '| Image URI | \\\`\{"${{ steps.meta.outputs.uri }}}\\\` |' >> \$GITHUB_STEP_SUMMARY
-          echo '| Commit | \{"${{ github.sha }}} |' >> \$GITHUB_STEP_SUMMARY`} title="Terminal"></CodeBlock>
+          echo '| Service | \${{ env.SERVICE }} |' >> \$GITHUB_STEP_SUMMARY
+          echo '| Tag | \\\`\${{ steps.meta.outputs.tag }}\\\` |' >> \$GITHUB_STEP_SUMMARY
+          echo '| Image URI | \\\`\${{ steps.meta.outputs.uri }}\\\` |' >> \$GITHUB_STEP_SUMMARY
+          echo '| Commit | \${{ github.sha }} |' >> \$GITHUB_STEP_SUMMARY`} title="Terminal"></CodeBlock>
 
   <h3>Push and Watch It Run</h3>
 <CodeBlock code={`# In WSL Terminal — from ~/projects/shopstream-app/
@@ -1498,8 +1498,8 @@ jobs:
     name: Detect Changed Services
     runs-on: ubuntu-latest
     outputs:
-      matrix: \{"${{ steps.changes.outputs.matrix }}}
-      any_changed: \{"${{ steps.changes.outputs.any_changed }}}
+      matrix: \${{ steps.changes.outputs.matrix }}
+      any_changed: \${{ steps.changes.outputs.any_changed }}
 
     steps:
       - uses: actions/checkout@v4
@@ -1520,7 +1520,7 @@ jobs:
           done
 
           # On workflow_dispatch, build all services
-          if [ '\{"${{ github.event_name }}}' = 'workflow_dispatch' ]; then
+          if [ '\${{ github.event_name }}' = 'workflow_dispatch' ]; then
             CHANGED=()
             for svc in '\${SERVICES[@]}'; do
               CHANGED+=('\\'\$svc\\'')
@@ -1541,12 +1541,12 @@ jobs:
 
   # Build and test each changed service in parallel
   build-test:
-    name: 🔧 \{"${{ matrix.service }}}
+    name: 🔧 \${{ matrix.service }}
     needs: changed-services
     if: needs.changed-services.outputs.any_changed == 'true'
     runs-on: ubuntu-latest
     strategy:
-      matrix: \{"${{ fromJson(needs.changed-services.outputs.matrix) }}}
+      matrix: \${{ fromJson(needs.changed-services.outputs.matrix) }}
       fail-fast: false    # Don't cancel other services if one fails
 
     permissions:
@@ -1570,11 +1570,11 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: services/\{"${{ matrix.service }}}/package-lock.json
+          cache-dependency-path: services/\${{ matrix.service }}/package-lock.json
 
       - name: Install &amp; Test
         run: |
-          cd services/\{"${{ matrix.service }}}
+          cd services/\${{ matrix.service }}
           npm ci
           npm run lint
           npm test -- --coverage
@@ -1586,29 +1586,29 @@ jobs:
         if: github.event_name == 'push' &amp;&amp; github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: \{"${{ secrets.AWS_ROLE_ARN }}}
-          role-session-name: ci-\{"${{ matrix.service }}}-\{"${{ github.run_id }}}
-          aws-region: \{"${{ env.AWS_REGION }}}
+          role-to-assume: \${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: ci-\${{ matrix.service }}-\${{ github.run_id }}
+          aws-region: \${{ env.AWS_REGION }}
 
       - name: Build &amp; Push Image
         if: github.event_name == 'push' &amp;&amp; github.ref == 'refs/heads/main'
         run: |
-          SHORT_SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
+          SHORT_SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
           REGISTRY=\$(aws ecr get-authorization-token --query 'authorizationData[0].proxyEndpoint' --output text | sed 's|https://||')
 
           aws ecr get-login-password | docker login --username AWS --password-stdin \$REGISTRY
 
           docker buildx build \\
             --platform linux/amd64 \\
-            --cache-from type=registry,ref=\$REGISTRY/shopstream/\{"${{ matrix.service }}}:cache \\
-            --cache-to type=registry,ref=\$REGISTRY/shopstream/\{"${{ matrix.service }}}:cache,mode=max \\
-            --tag \$REGISTRY/shopstream/\{"${{ matrix.service }}}:\$SHORT_SHA \\
+            --cache-from type=registry,ref=\$REGISTRY/shopstream/\${{ matrix.service }}:cache \\
+            --cache-to type=registry,ref=\$REGISTRY/shopstream/\${{ matrix.service }}:cache,mode=max \\
+            --tag \$REGISTRY/shopstream/\${{ matrix.service }}:\$SHORT_SHA \\
             --push \\
-            services/\{"${{ matrix.service }}}
+            services/\${{ matrix.service }}
 
-          echo '✅ Pushed: \$REGISTRY/shopstream/\{"${{ matrix.service }}}:\$SHORT_SHA'
+          echo '✅ Pushed: \$REGISTRY/shopstream/\${{ matrix.service }}:\$SHORT_SHA'
           echo 'IMAGE_TAG=\$SHORT_SHA' >> \$GITHUB_ENV
-          echo 'IMAGE_URI=\$REGISTRY/shopstream/\{"${{ matrix.service }}}:\$SHORT_SHA' >> \$GITHUB_ENV`} title="Terminal"></CodeBlock>
+          echo 'IMAGE_URI=\$REGISTRY/shopstream/\${{ matrix.service }}:\$SHORT_SHA' >> \$GITHUB_ENV`} title="Terminal"></CodeBlock>
 
   <ConceptBox title="The fail-fast: false line is important">
      Without it, if <code>cart-service</code> fails its tests, GitHub cancels the matrix jobs for <code>order-service</code>, <code>notification-service</code>, and the rest. You lose visibility — you don't know if the other services have problems too. With <code>fail-fast: false</code>, all services run to completion, and you see every failure in one CI run instead of debugging one-at-a-time.
@@ -1636,7 +1636,7 @@ jobs:
           cache: 'npm'
           # Critical: point to the service's lockfile, not the root
           # Without this, cache is invalidated whenever ANY service's lockfile changes
-          cache-dependency-path: services/\{"${{ matrix.service }}}/package-lock.json
+          cache-dependency-path: services/\${{ matrix.service }}/package-lock.json
 
 # This tells GitHub: 'cache node_modules unless package-lock.json changes'
 # GitHub stores the cache keyed by a hash of package-lock.json
@@ -1654,15 +1654,15 @@ jobs:
       - name: Build with registry cache
         uses: docker/build-push-action@v5
         with:
-          context: services/\{"${{ matrix.service }}}
+          context: services/\${{ matrix.service }}
           push: true
-          tags: \{"${{ env.IMAGE_URI }}}
+          tags: \${{ env.IMAGE_URI }}
           # Pull layers from last successful build
           cache-from: |
-            type=registry,ref=\{"${{ env.REGISTRY }}}/shopstream/\{"${{ matrix.service }}}:cache
+            type=registry,ref=\${{ env.REGISTRY }}/shopstream/\${{ matrix.service }}:cache
           # Push layers for next build to use
           cache-to: |
-            type=registry,ref=\{"${{ env.REGISTRY }}}/shopstream/\{"${{ matrix.service }}}:cache,mode=max
+            type=registry,ref=\${{ env.REGISTRY }}/shopstream/\${{ matrix.service }}:cache,mode=max
           # mode=max: cache ALL layers (not just final stage)
           # mode=min: only cache layers used in final image (smaller, less useful)`} title="Terminal"></CodeBlock>
 
@@ -1676,7 +1676,7 @@ jobs:
   </tbody></table>
 
   <WarningBox>
-    <strong>⚠️ ECR cache images cost money.</strong> The <code>:cache</code> tag is a real ECR image that stores Docker layers. These can grow to 500MB+ per service. Add an ECR lifecycle policy to expire cache images older than 7 days: <code>aws ecr put-lifecycle-policy --repository-name shopstream/product-catalog --lifecycle-policy-text '{"rules":[{"rulePriority":1,"selection":{"tagStatus":"tagged","tagPrefixList":["cache"],"countType":"sinceImagePushed","countUnit":"days","countNumber":7},"action":{"type":"expire"}}]}'</code>
+    <strong>⚠️ ECR cache images cost money.</strong> The <code>:cache</code> tag is a real ECR image that stores Docker layers. These can grow to 500MB+ per service. Add an ECR lifecycle policy to expire cache images older than 7 days: <code>aws ecr put-lifecycle-policy --repository-name shopstream/product-catalog --lifecycle-policy-text '{"{"}"rules":[{"{"}"rulePriority":1,"selection":{"{"}"tagStatus":"tagged","tagPrefixList":["cache"],"countType":"sinceImagePushed","countUnit":"days","countNumber":7{"}"},"action":{"{"}"type":"expire"{"}"}{"}"}]{"}"}'</code>
   </WarningBox>
 
   
@@ -1715,10 +1715,10 @@ on:
     outputs:
       image_tag:
         description: 'SHA-based image tag'
-        value: \{"${{ jobs.build.outputs.image_tag }}}
+        value: \${{ jobs.build.outputs.image_tag }}
       image_uri:
         description: 'Full ECR image URI'
-        value: \{"${{ jobs.build.outputs.image_uri }}}
+        value: \${{ jobs.build.outputs.image_uri }}
 
 jobs:
   build:
@@ -1727,8 +1727,8 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      image_tag: \{"${{ steps.meta.outputs.tag }}}
-      image_uri: \{"${{ steps.meta.outputs.uri }}}
+      image_tag: \${{ steps.meta.outputs.tag }}
+      image_uri: \${{ steps.meta.outputs.uri }}
 
     steps:
       - uses: actions/checkout@v4
@@ -1737,18 +1737,18 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: services/\{"${{ inputs.service }}}/package-lock.json
+          cache-dependency-path: services/\${{ inputs.service }}/package-lock.json
 
       - name: Install &amp; Test
-        run: cd services/\{"${{ inputs.service }}} &amp;&amp; npm ci &amp;&amp; npm test
+        run: cd services/\${{ inputs.service }} &amp;&amp; npm ci &amp;&amp; npm test
         env:
           NODE_ENV: test
 
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: \{"${{ secrets.AWS_ROLE_ARN }}}
-          aws-region: \{"${{ inputs.aws_region }}}
+          role-to-assume: \${{ secrets.AWS_ROLE_ARN }}
+          aws-region: \${{ inputs.aws_region }}
 
       - name: Login to ECR
         id: ecr
@@ -1757,19 +1757,19 @@ jobs:
       - name: Build metadata
         id: meta
         run: |
-          SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
-          URI='\{"${{ steps.ecr.outputs.registry }}}/shopstream/\{"${{ inputs.service }}}:\${SHA}'
+          SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
+          URI='\${{ steps.ecr.outputs.registry }}/shopstream/\${{ inputs.service }}:\${SHA}'
           echo 'tag=\${SHA}' >> \$GITHUB_OUTPUT
           echo 'uri=\${URI}' >> \$GITHUB_OUTPUT
 
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v5
         with:
-          context: services/\{"${{ inputs.service }}}
+          context: services/\${{ inputs.service }}
           push: true
-          tags: \{"${{ steps.meta.outputs.uri }}}
-          cache-from: type=registry,ref=\{"${{ steps.ecr.outputs.registry }}}/shopstream/\{"${{ inputs.service }}}:cache
-          cache-to: type=registry,ref=\{"${{ steps.ecr.outputs.registry }}}/shopstream/\{"${{ inputs.service }}}:cache,mode=max`} title="Terminal"></CodeBlock>
+          tags: \${{ steps.meta.outputs.uri }}
+          cache-from: type=registry,ref=\${{ steps.ecr.outputs.registry }}/shopstream/\${{ inputs.service }}:cache
+          cache-to: type=registry,ref=\${{ steps.ecr.outputs.registry }}/shopstream/\${{ inputs.service }}:cache,mode=max`} title="Terminal"></CodeBlock>
 
   <h3>Calling the Reusable Workflow</h3>
 <CodeBlock code={`# .github/workflows/order-service-ci.yml
@@ -1791,7 +1791,7 @@ jobs:
     with:
       service: order-service
     secrets:
-      AWS_ROLE_ARN: \{"${{ secrets.AWS_ROLE_ARN }}}`} title="Terminal"></CodeBlock>
+      AWS_ROLE_ARN: \${{ secrets.AWS_ROLE_ARN }}`} title="Terminal"></CodeBlock>
 
   
 
@@ -1839,7 +1839,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      services: \{"${{ steps.detect.outputs.services }}}
+      services: \${{ steps.detect.outputs.services }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1855,17 +1855,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: \{"${{ fromJson(needs.detect-changes.outputs.services) }}}
+        service: \${{ fromJson(needs.detect-changes.outputs.services) }}
       fail-fast: false
-    name: 🔧 \{"${{ matrix.service }}}
+    name: 🔧 \${{ matrix.service }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: services/\{"${{ matrix.service }}}/package-lock.json
-      - run: cd services/\{"${{ matrix.service }}} &amp;&amp; npm ci &amp;&amp; npm run lint &amp;&amp; npm test
+          cache-dependency-path: services/\${{ matrix.service }}/package-lock.json
+      - run: cd services/\${{ matrix.service }} &amp;&amp; npm ci &amp;&amp; npm run lint &amp;&amp; npm test
         env:
           NODE_ENV: test`} title="Terminal"></CodeBlock>
 
@@ -2532,7 +2532,7 @@ cat ~/.ssh/ci_infra_deploy_key`} title="Terminal"></CodeBlock>
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: \{"${{ secrets.INFRA_CONFIG_DEPLOY_KEY }}}
+          ssh-private-key: \${{ secrets.INFRA_CONFIG_DEPLOY_KEY }}
 
       - name: Clone infra-config repo
         run: |
@@ -2545,11 +2545,11 @@ cat ~/.ssh/ci_infra_deploy_key`} title="Terminal"></CodeBlock>
         run: |
           cd shopstream-infra-config
 
-          SHORT_SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
+          SHORT_SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
 
           # Update staging values for each service that was built
-          # \{"${{ needs.build-push.outputs.services }}} is a JSON array from matrix
-          SERVICES='\{"${{ needs.build-push.outputs.built_services }}}'
+          # \${{ needs.build-push.outputs.services }} is a JSON array from matrix
+          SERVICES='\${{ needs.build-push.outputs.built_services }}'
 
           for SERVICE in \$(echo \$SERVICES | jq -r '.[]'); do
             VALUES_FILE='environments/staging/values/\${SERVICE}.yaml'
@@ -2567,16 +2567,16 @@ cat ~/.ssh/ci_infra_deploy_key`} title="Terminal"></CodeBlock>
         run: |
           cd shopstream-infra-config
 
-          SHORT_SHA=\$(echo '\{"${{ github.sha }}}' | cut -c1-8)
+          SHORT_SHA=\$(echo '\${{ github.sha }}' | cut -c1-8)
 
           git add environments/staging/values/
           git diff --staged --quiet &amp;&amp; echo 'No changes to commit' &amp;&amp; exit 0
 
           git commit -m 'ci: deploy shopstream services → \${SHORT_SHA}
 
-          Triggered by: \{"${{ github.actor }}}
-          Source commit: \{"${{ github.sha }}}
-          Workflow run: \{"${{ github.server_url }}}/\{"${{ github.repository }}}/actions/runs/\{"${{ github.run_id }}}'
+          Triggered by: \${{ github.actor }}
+          Source commit: \${{ github.sha }}
+          Workflow run: \${{ github.server_url }}/\${{ github.repository }}/actions/runs/\${{ github.run_id }}'
 
           # Retry push up to 3 times (handles concurrent CI runs)
           for i in 1 2 3; do
@@ -2652,28 +2652,28 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: \{"${{ secrets.AWS_ROLE_ARN }}}
+          role-to-assume: \${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-south-1
 
       - name: Verify image tag exists
         run: |
           aws ecr describe-images \\
-            --repository-name shopstream/\{"${{ inputs.service }}} \\
-            --image-ids imageTag=\{"${{ inputs.image_tag }}} \\
+            --repository-name shopstream/\${{ inputs.service }} \\
+            --image-ids imageTag=\${{ inputs.image_tag }} \\
             --region ap-south-1 > /dev/null
-          echo '✅ Image \{"${{ inputs.service }}}:\{"${{ inputs.image_tag }}} verified in ECR'
+          echo '✅ Image \${{ inputs.service }}:\${{ inputs.image_tag }} verified in ECR'
 
   promote:
-    name: 🚀 Promote to \{"${{ inputs.environment }}}
+    name: 🚀 Promote to \${{ inputs.environment }}
     needs: [verify-image]
     runs-on: ubuntu-latest
-    environment: \{"${{ inputs.environment }}}  # ← This triggers approval for prod
+    environment: \${{ inputs.environment }}  # ← This triggers approval for prod
 
     steps:
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: \{"${{ secrets.INFRA_CONFIG_DEPLOY_KEY }}}
+          ssh-private-key: \${{ secrets.INFRA_CONFIG_DEPLOY_KEY }}
 
       - name: Clone infra-config
         run: |
@@ -2685,25 +2685,25 @@ jobs:
       - name: Update image tag
         run: |
           cd shopstream-infra-config
-          VALUES_FILE='environments/\{"${{ inputs.environment }}}/values/\{"${{ inputs.service }}}.yaml'
-          sed -i 's/  tag: .*/  tag: \\'\{"${{ inputs.image_tag }}}\\'/' '\$VALUES_FILE'
+          VALUES_FILE='environments/\${{ inputs.environment }}/values/\${{ inputs.service }}.yaml'
+          sed -i 's/  tag: .*/  tag: \\'\${{ inputs.image_tag }}\\'/' '\$VALUES_FILE'
           cat '\$VALUES_FILE'
 
       - name: Commit promotion
         run: |
           cd shopstream-infra-config
-          git add environments/\{"${{ inputs.environment }}}/values/
-          git commit -m 'promote: \{"${{ inputs.service }}} → \{"${{ inputs.environment }}} @ \{"${{ inputs.image_tag }}}
+          git add environments/\${{ inputs.environment }}/values/
+          git commit -m 'promote: \${{ inputs.service }} → \${{ inputs.environment }} @ \${{ inputs.image_tag }}
 
-          Promoted by: \{"${{ github.actor }}}
-          Approved via: GitHub Environment (\{"${{ inputs.environment }}})
-          Source tag: \{"${{ inputs.image_tag }}}'
+          Promoted by: \${{ github.actor }}
+          Approved via: GitHub Environment (\${{ inputs.environment }})
+          Source tag: \${{ inputs.image_tag }}'
           git push origin main
 
       - name: Wait for ArgoCD sync
         run: |
           echo '⏳ ArgoCD will sync within 3 minutes'
-          echo 'Monitor: https://argocd.shopstream.io/applications/shopstream-\{"${{ inputs.service }}}-\{"${{ inputs.environment }}}'`} title="Terminal"></CodeBlock>
+          echo 'Monitor: https://argocd.shopstream.io/applications/shopstream-\${{ inputs.service }}-\${{ inputs.environment }}'`} title="Terminal"></CodeBlock>
 
   <h3>Branch Strategy for GitOps</h3>
   <div className="diagram">
@@ -3158,7 +3158,7 @@ kubectl argo rollouts promote shopstream-order-service -n shopstream-prod
 kubectl argo rollouts abort shopstream-order-service -n shopstream-prod`} title="Terminal"></CodeBlock>
 
   <WarningBox>
-    <strong>⚠️ Argo Rollouts requires Prometheus for automated analysis.</strong> If Prometheus isn't installed, the AnalysisRun will fail immediately with "no data points" and trigger a rollback. Either install Prometheus (kube-prometheus-stack via Helm) before enabling analysis, or use a <code>pause: {duration: 10m}</code> step with manual promotion for the initial setup. Never skip the analysis in production — the whole point of canary is automatic rollback.
+    <strong>⚠️ Argo Rollouts requires Prometheus for automated analysis.</strong> If Prometheus isn't installed, the AnalysisRun will fail immediately with "no data points" and trigger a rollback. Either install Prometheus (kube-prometheus-stack via Helm) before enabling analysis, or use a <code>pause: {"{"}duration: 10m{"}"}</code> step with manual promotion for the initial setup. Never skip the analysis in production — the whole point of canary is automatic rollback.
   </WarningBox>
 
   

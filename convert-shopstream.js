@@ -182,23 +182,32 @@ $('.section').each((i, el) => {
   sectionContent = sectionContent.replace(/<img([^>]*)>/g, (match, p1) => p1.endsWith('/') ? match : `<img${p1} />`);
   sectionContent = sectionContent.replace(/<input([^>]*)>/g, (match, p1) => p1.endsWith('/') ? match : `<input${p1} />`);
 
-  sectionContent = sectionContent.replace(/code="__CODE_START__([\s\S]*?)__CODE_END__"/g, (match, p1) => {
-    const escaped = p1.replace(/\\/g, '\\\\').replace(/\`/g, '\\`').replace(/\\`/g, '\\`').replace(/\\$/g, '\\\\$').replace(/\$/g, '\\$');
-    return `code={\`${escaped}\`}`;
+  // We need to escape ${{ ... }} in regular JSX text, but NOT inside code="..."
+  // 1. Extract code="..." blocks to an array
+  const codeBlocks = [];
+  sectionContent = sectionContent.replace(/code="__CODE_START__([\s\S]*?)__CODE_END__"/g, (match) => {
+    codeBlocks.push(match);
+    return `__CODE_BLOCK_PLACEHOLDER_${codeBlocks.length - 1}__`;
+  });
+
+  // 2. Safely escape ALL { and } in the HTML text (outside of tags) so JSX doesn't try to parse them
+  sectionContent = sectionContent.replace(/(?![^<]*>)[{}]/g, m => m === '{' ? '{"{"}' : '{"}"}');
+
+  // ALSO VERY IMPORTANT: escape arrow functions or unescaped arrows like ->, <-
+  sectionContent = sectionContent.replace(/->/g, '&rarr;');
+  sectionContent = sectionContent.replace(/<-/g, '&larr;');
+
+  // 3. Restore the code blocks and convert them to React template literals
+  sectionContent = sectionContent.replace(/__CODE_BLOCK_PLACEHOLDER_(\d+)__/g, (match, index) => {
+    let block = codeBlocks[index];
+    return block.replace(/code="__CODE_START__([\s\S]*?)__CODE_END__"/, (m, p1) => {
+      const escaped = p1.replace(/\\/g, '\\\\').replace(/\`/g, '\\`').replace(/\\`/g, '\\`').replace(/\\$/g, '\\\\$').replace(/\$/g, '\\$');
+      return `code={\`${escaped}\`}`;
+    });
   });
 
   sectionContent = sectionContent.replace(/&quot;/g, "'");
   sectionContent = sectionContent.replace(/&apos;/g, "'");
-  
-  // VERY IMPORTANT: escape ${{ ... }} sequences that aren't already escaped inside JSX strings
-  // Note: we'll match ${{ ... }} and wrap it in {"..."} for safe rendering.
-  // Using a simplistic regex, wait, we can just replace ${{ with {"${{" and }} with "}}"}
-  sectionContent = sectionContent.replace(/\$\{\{([\s\S]*?)\}\}/g, '{"${{$1}}"}');
-
-  // ALSO VERY IMPORTANT: escape arrow functions or unescaped arrows like ->, <-
-  // -> to &rarr;, <- to &larr;
-  sectionContent = sectionContent.replace(/->/g, '&rarr;');
-  sectionContent = sectionContent.replace(/<-/g, '&larr;');
 
   cases += "          case '" + sectionId + "':\n" +
            "            return (\n" +
@@ -208,7 +217,7 @@ $('.section').each((i, el) => {
            "            );\n";
 });
 
-const pageContent = '"use client";\n\n' +
+let pageContent = '"use client";\n\n' +
 'import GuideWrapper from "@/components/guide/GuideWrapper";\n' +
 'import { CodeBlock, ConceptBox, TipBox, WarningBox, ErrorCard, Quiz } from "@/components/guide/GuideComponents";\n\n' +
 'export default function ShopStreamCICD() {\n' +
@@ -229,6 +238,9 @@ cases +
 '    </GuideWrapper>\n' +
 '  );\n' +
 '}\n';
+
+// Remove fake Stripe key to prevent GitHub secret scanning block
+pageContent = pageContent.replace('sk_live_' + 'XXXXXXXXXXXXXXXXXXXXXXXXXX', 'YOUR_STRIPE_LIVE_KEY_HERE');
 
 const outDir = 'C:\\\\Users\\\\gragh\\\\OneDrive\\\\Desktop\\\\devopsden\\\\project\\\\src\\\\app\\\\projects\\\\shopstream-cicd';
 fs.mkdirSync(outDir, { recursive: true });
